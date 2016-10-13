@@ -22,7 +22,6 @@ public class ResultActivity extends Activity {
 
         final Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.GLOBAL_SPACE);
-
         try {
 
             JSONObject jsonData = new JSONObject(message);
@@ -48,7 +47,7 @@ public class ResultActivity extends Activity {
 
                     intent.putExtra(GLOBAL_SPACE, Integer.toString(result));
                     setResult(RESULT_OK, intent);
-                    finish();
+                    finish(); // close child activity
                 }
             };
 

@@ -30,7 +30,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/button"
         android:layout_alignEnd="@+id/button"
-        android:hint="Введите первое число" />
+        android:hint="Введите первое число"
+        android:text="123" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/editText"
-        android:layout_alignEnd="@+id/editText" />
+        android:layout_alignEnd="@+id/editText"
+        android:text="456" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,6 +58,14 @@
             android:layout_gravity="center_vertical"
             android:clickable="false"
             android:singleLine="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="broadcast"
+            android:id="@+id/button3"
+            android:layout_gravity="center_vertical"
+            android:clickable="false" />
 
     </LinearLayout>
 </RelativeLayout>
