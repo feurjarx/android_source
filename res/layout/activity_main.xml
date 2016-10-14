@@ -9,32 +9,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.roman.myapplication.MainActivity">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Сложить"
-        android:id="@+id/button"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="calcSumResult" />
-
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button"
+        android:layout_alignRight="@+id/sumButton"
+        android:layout_alignEnd="@+id/sumButton"
         android:hint="Введите первое число"
-        android:text="123" />
+        android:text="123"
+        android:layout_marginTop="20dp" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editText2"
         android:hint="Введите второе число"
@@ -45,27 +34,48 @@
         android:layout_alignEnd="@+id/editText"
         android:text="456" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Сложить"
+        android:id="@+id/sumButton"
+        android:layout_below="@+id/editText2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Diff result from child activity: "
-            android:id="@+id/resultFromChildTextView"
-            android:layout_gravity="center_vertical"
-            android:clickable="false"
-            android:singleLine="false" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Diff result from child activity: "
+        android:id="@+id/resultFromChildTextView"
+        android:clickable="false"
+        android:singleLine="false" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="broadcast"
-            android:id="@+id/button3"
-            android:layout_gravity="center_vertical"
-            android:clickable="false" />
+    <Button
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:text="broadcast"
+        android:id="@+id/broadcastButton"
+        android:layout_gravity="center_vertical"
+        android:clickable="false"
+        android:layout_below="@+id/sumButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/sumButton"
+        android:layout_alignEnd="@+id/sumButton" />
 
-    </LinearLayout>
+    <Button
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:text="pending"
+        android:id="@+id/pendingButton"
+        android:layout_gravity="center_vertical"
+        android:clickable="false"
+        android:layout_below="@+id/broadcastButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/broadcastButton"
+        android:layout_alignEnd="@+id/broadcastButton" />
+
 </RelativeLayout>
