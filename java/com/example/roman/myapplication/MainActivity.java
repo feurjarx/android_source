@@ -1,7 +1,5 @@
 package com.example.roman.myapplication;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -12,13 +10,14 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,43 +26,24 @@ public class MainActivity extends AppCompatActivity {
 
     public final static String GLOBAL_SPACE = "com.example.roman.myapplication.MESSAGE";
     public final static String BROADCAST_ACTION = "com.example.roman.myapplication.BROADCAST";
-    public final static String CALC_RESULT = "com.example.roman.myapplication.CALC.RESULT";
 
-    private final static String[] actions = {"begin", "middle", "end"};
-    private static int counter = 0;
+    private TextView resultFromChildTextView;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
             String type = intent.getStringExtra("type");
-            TextView resultFromChildTextView = (TextView)(findViewById(R.id.resultFromChildTextView));
 
             switch (type) {
-                case "begin":
-                    resultFromChildTextView.setText("process begin");
+                case "simple-service-signal":
+                    resultFromChildTextView.append("\n" + intent.getStringExtra("duration") + " completed.");
                     break;
-                case "middle":
-                    resultFromChildTextView.setText("process middle");
-                    break;
-                case "end":
-                    resultFromChildTextView.setText("process end");
+                case "intent-service-signal":
+                    resultFromChildTextView.append("\n" + intent.getStringExtra("duration") + " completed.");
                     break;
                 default:
                     resultFromChildTextView.setText("unknown process");
-            }
-
-            try {
-
-                TimeUnit.MILLISECONDS.sleep(1000);
-                counter++;
-
-                Intent serviceIntent = new Intent(context, MyService.class);
-                serviceIntent.putExtra("type", actions[counter % actions.length]);
-                startService(serviceIntent);
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     };
@@ -72,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
+        registerReceiver(this.broadcastReceiver, intentFilter);
+
+        resultFromChildTextView = (TextView)(findViewById(R.id.resultFromChildTextView));
+        resultFromChildTextView.setMovementMethod(new ScrollingMovementMethod());
 
         Button sumBtn = (Button) findViewById(R.id.sumButton);
         sumBtn.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
                     int result = calcService.sum(Integer.parseInt(firstNumb), Integer.parseInt(secondNumb));
 
-                    // Do something in response to button
                     Intent intent = new Intent(v.getContext(), ResultActivity.class);
                     intent.putExtra(GLOBAL_SPACE, "{'first':" + firstNumb + ", 'second': " + secondNumb + ", 'result':  " + Integer.toString(result) + " }");
                     startActivityForResult(intent, 1);
@@ -99,20 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Lab3:broadcast
-        Button broadcastBtn = (Button) findViewById(R.id.broadcastButton);
-        broadcastBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), MyService.class);
-                intent.putExtra("type", "begin");
-                startService(intent);
-            }
-        });
-
-        IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
-        registerReceiver(this.broadcastReceiver, intentFilter);
-
-        // Lab3:pendingIntent
+        // Lab3: demo PendingIntent
         Button pendingBtn = (Button) findViewById(R.id.pendingButton);
         pendingBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -132,6 +104,35 @@ public class MainActivity extends AppCompatActivity {
                 startService(calcServiceIntent);
             }
         });
+
+        // Lab3: demo BroadcastReceiver - run Simple Service
+        Button broadcastBtn = (Button) findViewById(R.id.broadcastButton);
+        broadcastBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                int rnd = (new Random()).nextInt(5000);
+
+                Intent intent = new Intent(v.getContext(), MyService.class);
+                intent.putExtra("duration", rnd);
+                startService(intent);
+
+                resultFromChildTextView.append("\n" + Integer.toString(rnd) + " started...");
+            }
+        });
+
+        // Lab3: demo IntentService
+        Button intentServiceBtn = (Button) findViewById(R.id.intentServiceButton);
+        intentServiceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int rnd = (new Random()).nextInt(5000);
+
+                Intent intent = new Intent(v.getContext(), MyIntentService.class);
+                intent.putExtra("duration", rnd);
+                startService(intent);
+
+                resultFromChildTextView.append("\n" + Integer.toString(rnd) + " started...");
+            }
+        });
     }
 
     /**
@@ -149,25 +150,18 @@ public class MainActivity extends AppCompatActivity {
 
             case 2:
 
-                final String jsonResult = intent.getStringExtra("json_result");
-
-                Intent resultActivityIntent = new Intent(this, ResultActivity.class);
-                resultActivityIntent.putExtra(GLOBAL_SPACE, jsonResult);
-                startActivity(resultActivityIntent);
-
+                String jsonResult = intent.getStringExtra("json_result");
+                resultFromChildTextView.append("\nJSON: '" + jsonResult + "'");
                 break;
 
             default:
 
                 String result = intent.getStringExtra(GLOBAL_SPACE);
-
-                TextView textView = (TextView) findViewById(R.id.resultFromChildTextView);
-
-                result = textView.getText().toString() + " " + result;
-                textView.setText(result);
+                resultFromChildTextView.append("\n***\nResult from child Activity: " + result + "\n***");
         }
     }
 
+    // Retrieving service from binder
     private ServiceConnection sConn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -187,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // Binding this activity with service ...
         Intent intent = new Intent(this, CalcService.class);
         bindService(intent, sConn, Context.BIND_AUTO_CREATE);
     }

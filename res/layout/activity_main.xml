@@ -44,19 +44,29 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Diff result from child activity: "
         android:id="@+id/resultFromChildTextView"
-        android:clickable="false"
-        android:singleLine="false" />
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:lines="20"
+        android:text=""
+        android:scrollbars = "vertical"
+        android:layout_below="@+id/intentServiceButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="false"
+        android:autoText="false"
+        android:gravity="bottom"
+        android:longClickable="false"
+        android:scrollIndicators="top|bottom|start|end" />
 
     <Button
         android:layout_width="148dp"
         android:layout_height="wrap_content"
-        android:text="broadcast"
-        android:id="@+id/broadcastButton"
+        android:text="demo pending"
+        android:id="@+id/pendingButton"
         android:layout_gravity="center_vertical"
         android:clickable="false"
         android:layout_below="@+id/sumButton"
@@ -68,8 +78,21 @@
     <Button
         android:layout_width="148dp"
         android:layout_height="wrap_content"
-        android:text="pending"
-        android:id="@+id/pendingButton"
+        android:text="run simple service"
+        android:id="@+id/broadcastButton"
+        android:layout_gravity="center_vertical"
+        android:clickable="false"
+        android:layout_below="@+id/pendingButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/pendingButton"
+        android:layout_alignEnd="@+id/pendingButton" />
+
+    <Button
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:text="run intent service"
+        android:id="@+id/intentServiceButton"
         android:layout_gravity="center_vertical"
         android:clickable="false"
         android:layout_below="@+id/broadcastButton"

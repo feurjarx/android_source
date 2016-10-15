@@ -44,6 +44,7 @@ public class ResultActivity extends Activity {
             TextView txtView = (TextView) findViewById(R.id.textView1);
             txtView.setText("Sum " + jsonData.getString("first") + " and " + jsonData.getString("second") + " equal is " + jsonData.getString("result"));
 
+            // Lab3: demo Service Binding
             Button returnedBtn = (Button) findViewById(R.id.button2);
             View.OnClickListener handler = new View.OnClickListener() {
                 public void onClick(View v) {

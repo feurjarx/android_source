@@ -1,27 +1,18 @@
 package com.example.roman.myapplication;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
-import android.os.IBinder;
 
 import java.util.concurrent.TimeUnit;
 
-public class MyService extends Service {
-    public MyService() {
-    }
+public class MyIntentService extends IntentService {
 
-    public void onCreate() {
-        super.onCreate();
+    public MyIntentService() {
+        super("MyIntentService");
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw null;
-    }
-
-    public int onStartCommand(Intent intent, int flags, int startId){
-
+    protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             int duration = intent.getIntExtra("duration", 0);
 
@@ -30,7 +21,7 @@ public class MyService extends Service {
                 TimeUnit.MILLISECONDS.sleep(duration);
 
                 Intent broadcastIntent = new Intent(MainActivity.BROADCAST_ACTION);
-                broadcastIntent.putExtra("type", "simple-service-signal");
+                broadcastIntent.putExtra("type", "intent-service-signal");
                 broadcastIntent.putExtra("duration", Integer.toString(duration));
                 sendBroadcast(broadcastIntent);
 
@@ -38,9 +29,9 @@ public class MyService extends Service {
                 e.printStackTrace();
             }
         }
+    }
 
-        stopSelfResult(startId);
-
-        return super.onStartCommand(intent, flags, startId);
+    public void onDestroy() {
+        super.onDestroy();
     }
 }
