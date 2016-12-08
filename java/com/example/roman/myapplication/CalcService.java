@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 public class CalcService extends Service {
 
+    // метод 2
     public class CalcServiceBinder extends Binder {
 
         CalcService getService() {
@@ -16,8 +17,10 @@ public class CalcService extends Service {
         }
     }
 
+    // метод 2
     private final IBinder calcServiceBinder = new CalcServiceBinder();
 
+    // метод 2
     @Override
     public IBinder onBind(Intent intent) {
         return calcServiceBinder;
@@ -28,10 +31,12 @@ public class CalcService extends Service {
         return a - b;
     }
 
+    // метод 2 (Этот метод дергается в главной активити через этот же связанный сервис)
     public int sum(int a, int b) {
         return a + b;
     }
 
+    // метод который сразу запускается, когда стартуем сервис (для метода 1)
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         String firstNumb = intent.getStringExtra("first_numb");
@@ -48,6 +53,7 @@ public class CalcService extends Service {
 
             try {
 
+                // отправка результата в onActivityResult главной активити (для метода 1)
                 pendingIntent.send(this, 0, calcResultIntent);
 
             } catch (PendingIntent.CanceledException e) {
