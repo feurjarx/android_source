@@ -21,14 +21,15 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    public CalcService calcService;
-    private boolean bound = false;
+    public CalcService calcService; // метод Service Binding
+    private boolean bound = false; // хренотень для метода Service Binding
 
     public final static String GLOBAL_SPACE = "com.example.roman.myapplication.MESSAGE";
     public final static String BROADCAST_ACTION = "com.example.roman.myapplication.BROADCAST";
 
     private TextView resultFromChildTextView;
 
+    // данный ресивер не относится ни к какому методу (Далее 0-ой метод)
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -53,12 +54,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // для метод 0
         IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
         registerReceiver(this.broadcastReceiver, intentFilter);
 
+        // инит вертикального скроллинга для resultFromChildTextView
         resultFromChildTextView = (TextView)(findViewById(R.id.resultFromChildTextView));
         resultFromChildTextView.setMovementMethod(new ScrollingMovementMethod());
 
+        // батон для демонстрации метода биндинга сервиса (метод 2)
         Button sumBtn = (Button) findViewById(R.id.sumButton);
         sumBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 String secondNumb = secondNumbElem.getText().toString();
 
                 try {
-
+                    // вызов метода связанного сервиса (для метода 2)
                     int result = calcService.sum(Integer.parseInt(firstNumb), Integer.parseInt(secondNumb));
 
                     Intent intent = new Intent(v.getContext(), ResultActivity.class);
@@ -84,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Lab3: demo PendingIntent
+        // Lab3: демо PendingIntent (метод 1)
+        // батон для метода 1
         Button pendingBtn = (Button) findViewById(R.id.pendingButton);
         pendingBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -93,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 EditText secondNumbElem = (EditText)findViewById(R.id.editText2);
 
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
+                // создание PendingIntent объекта (для метода 1)
                 PendingIntent pIntent = createPendingResult(2, intent, 0);
 
                 Intent calcServiceIntent = new Intent(v.getContext(), CalcService.class);
@@ -101,11 +107,13 @@ public class MainActivity extends AppCompatActivity {
                 calcServiceIntent.putExtra("p_intent", pIntent);
                 calcServiceIntent.putExtra("intent", intent);
 
+                // передача данных сервису (CalcService.java)
                 startService(calcServiceIntent);
+                // ответ придет через onActivityResult (метод в этом файле)
             }
         });
 
-        // Lab3: demo BroadcastReceiver - run Simple Service
+        // Lab3: демо BroadcastReceiver - run Simple Service (метод 0)
         Button broadcastBtn = (Button) findViewById(R.id.broadcastButton);
         broadcastBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -119,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Lab3: demo IntentService
+        // Lab3: демо IntentService (метод 3) и батно для него
         Button intentServiceBtn = (Button) findViewById(R.id.intentServiceButton);
         intentServiceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Сюда ответы от сервисов приходят
      * @param requestCode
      * @param resultCode
      * @param intent
@@ -161,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Retrieving service from binder
+    // объект для связывания данной активити с сервисом CalcService.java (для метода 2)
     private ServiceConnection sConn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -177,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    // Связывание данной активити с сервисом CalcService.java (метод 2)
     @Override
     protected void onStart() {
         super.onStart();
@@ -186,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
         bindService(intent, sConn, Context.BIND_AUTO_CREATE);
     }
 
+    // Отвязывание данной активити от сервиса CalcService.java (метод 2)
     @Override
     protected void onStop() {
         super.onStop();
@@ -196,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //для метод 0
     @Override
     protected void onDestroy() {
         super.onDestroy();
